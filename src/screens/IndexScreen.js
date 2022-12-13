@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
     borderColor: 'gray'
   },
   button:{
-  margin:20,  
+    margin:20,
+    fontSize:18
   },
   title: {
     fontSize: 18
