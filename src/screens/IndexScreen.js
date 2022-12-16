@@ -1,30 +1,54 @@
 import React, { useContext } from 'react'
-import { StyleSheet, View, Text, FlatList, Button } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  Button,
+  TouchableOpacity
+} from 'react-native'
 import { Context } from '../context/BlogContext'
 import { Feather } from '@expo/vector-icons'
 
-const IndexScreen = () => {
-  const { state, addBlogPost } = useContext(Context)
+const IndexScreen = ({ navigation }) => {
+  const { state, deleteBlogPost } = useContext(Context)
 
   return (
     <View>
-    <View style={styles.button} >
-      <Button onPress={() => addBlogPost()} title='Add Blog Post' />
-      </View>
       <FlatList
         data={state}
         keyExtractor={blogPosts => blogPosts.title}
         renderItem={({ item }) => {
           return (
-            <View style={styles.row}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Feather style={styles.icon} name='trash' />
-            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Show', { id: item.id })}
+            >
+              <View style={styles.row}>
+                <Text style={styles.title}>{item.title}</Text>
+                <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
+                  <Feather style={styles.icon} name='trash' />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           )
         }}
       />
     </View>
   )
+}
+
+IndexScreen.navigationOptions = ({ navigation }) => {
+  return {
+    
+    headerRight: () => (
+      <TouchableOpacity
+        style={{ margin:20, marginTop:10}}
+        onPress={() => navigation.navigate('Create')}
+      >
+        <Feather name='plus' size={30} color='#FFFF' />
+      </TouchableOpacity>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -35,10 +59,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderTopWidth: 1,
     borderColor: 'gray'
-  },
-  button:{
-    margin:20,
-    fontSize:18
   },
   title: {
     fontSize: 18
